@@ -117,15 +117,16 @@ class Blockchain:
         if not self.new_transactions:
             return False
 
-        last_block = self.last_block()
+        for transaction in self.new_transactions:
 
-        new_block = Block(index=last_block().index + 1,
-                          transactions=self.new_transactions,
-                          timestamp=time.time(),
-                          previous_hash=last_block.hash)
+            last_block = self.last_block()
+            new_block = Block(last_block().index + 1,
+                              transaction,
+                              time.time(),
+                              last_block.hash)
 
-        proof = self.find_proof_of_work(new_block)
-        self.add_block(new_block, proof)
+            proof = self.find_proof_of_work(new_block)
+            self.add_block(new_block, proof)
 
         self.new_transactions = []
-        return new_block.index
+        return True
