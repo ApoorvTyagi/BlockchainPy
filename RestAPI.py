@@ -1,3 +1,5 @@
+import json
+
 import BlockChain
 from flask import Flask, jsonify, request
 import logging
@@ -11,6 +13,10 @@ app = Flask(__name__)
 
 # Create the object of the class blockchain
 blockchain = BlockChain.Blockchain()
+
+
+def obj_dict(obj):
+    return obj.__dict__
 
 
 # Mining a new block
@@ -31,15 +37,13 @@ def mine_block():
 # Display blockchain in json format
 @app.route("/get_chain", methods=["GET"])
 def display_chain():
-    if blockchain.chain:
-        response = {"chain": blockchain.chain, "length": len(blockchain.chain)}
-        return jsonify(response), 200
-
-    return jsonify({"message": "No Chain Found"}, 200)
+    json_string = json.dumps(blockchain.chain, default=obj_dict)
+    response = {"chain": json_string, "length": len(blockchain.chain)}
+    return jsonify(response), 200
 
 
 # Check validity of blockchain
-@app.route("/valid", methods=["GET"])
+@app.route("/is_valid", methods=["GET"])
 def is_valid():
     validity = blockchain.chain_valid(blockchain.chain)
 

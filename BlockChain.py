@@ -1,6 +1,6 @@
-import json
 import logging
 import time
+import json
 from hashlib import sha256
 
 logger = logging.getLogger()
@@ -31,7 +31,7 @@ class Blockchain:
         self.create_genesis_block()
 
     def create_genesis_block(self):
-        genesis_block = Block(0, ["This is the first block of the chain...."], time.time(), "0")
+        genesis_block = Block(0, "This is the first block of the chain.", time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
 
@@ -118,13 +118,8 @@ class Blockchain:
             return False
 
         for transaction in self.new_transactions:
-
             last_block = self.last_block()
-            new_block = Block(last_block().index + 1,
-                              transaction,
-                              time.time(),
-                              last_block.hash)
-
+            new_block = Block(last_block.index + 1, transaction, time.time(), last_block.hash)
             proof = self.find_proof_of_work(new_block)
             self.add_block(new_block, proof)
 
