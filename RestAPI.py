@@ -1,5 +1,7 @@
+import json
+
 import BlockChain
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import logging
 
 logger = logging.getLogger()
@@ -13,23 +15,21 @@ app = Flask(__name__)
 blockchain = BlockChain.Blockchain()
 
 
-# Mining a new block
-@app.route("/mine_block", methods=["GET"])
-def mine_block():
-    logger.info("Mining new block...")
-    previous_block = blockchain.print_previous_block()
-    previous_proof = previous_block["proof"]
-    proof = blockchain.proof_of_work(previous_proof)
-    previous_hash = blockchain.hash(previous_block)
-    block = blockchain.create_block(proof, previous_hash)
+def obj_dict(obj):
+    return obj.__dict__
 
+
+# Mining a new block
+@app.route("/mine", methods=["GET"])
+def mine_block():
     response = {
-        "message": "A block is MINED",
-        "index": block["index"],
-        "timestamp": block["timestamp"],
-        "proof": block["proof"],
-        "previous_hash": block["previous_hash"],
+        "message": "Failed to mine"
     }
+
+    if blockchain.mine():
+        response = {
+            "message": "Pending transactions has been added to blockchain after mining new blocks"
+        }
 
     return jsonify(response), 200
 
@@ -37,19 +37,36 @@ def mine_block():
 # Display blockchain in json format
 @app.route("/get_chain", methods=["GET"])
 def display_chain():
-    response = {"chain": blockchain.chain, "length": len(blockchain.chain)}
+    json_string = json.dumps(blockchain.chain, default=obj_dict)
+    response = {"chain": json_string, "length": len(blockchain.chain)}
     return jsonify(response), 200
 
 
 # Check validity of blockchain
-@app.route("/valid", methods=["GET"])
-def valid():
+@app.route("/is_valid", methods=["GET"])
+def is_valid():
     validity = blockchain.chain_valid(blockchain.chain)
 
     if validity:
         response = {"message": "The Blockchain is valid."}
     else:
         response = {"message": "The Blockchain is not valid."}
+    return jsonify(response), 200
+
+
+@app.route("/add", methods=["GET"])
+def add_new_transaction():
+    transaction_data = request.args.get('data')
+    response = {
+        "message": "Cannot find transaction data"
+    }
+
+    if transaction_data:
+        blockchain.new_transactions.append(transaction_data)
+        response = {
+            "message": "Added new transaction"
+        }
+
     return jsonify(response), 200
 
 
