@@ -49,11 +49,11 @@ class Blockchain:
         while block_index < len(chain):
             # Checking Previous Hash is Valid or not
             block = chain[block_index]
-            if block["previous_hash"] != previous_block.compute_hash():
+            if block.previous_hash != previous_block.hash:
                 return False
 
             # Checking Validity of Proof of work
-            proof = block["proof"]
+            proof = block.hash
             if not self.is_valid_proof(block, proof):
                 return False
 
@@ -105,8 +105,7 @@ class Blockchain:
         Check if block_hash is valid hash of block and satisfies
         the difficulty criteria.
         """
-        return (block_hash.startswith('0' * Blockchain.difficulty) and
-                block_hash == block.compute_hash())
+        return block_hash.startswith('0' * Blockchain.difficulty)
 
     def mine(self):
         """
