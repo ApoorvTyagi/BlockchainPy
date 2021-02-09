@@ -9,3 +9,5 @@ TODO :
 2. Add logs
 
 3. Create Tests for CI
+
+I have also written an article explaning how I build this - https://apoorvtyagi.tech/creating-blockchain-python
