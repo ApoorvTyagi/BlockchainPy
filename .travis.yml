@@ -1,0 +1,20 @@
+#Specify language and versions
+language: python
+python:
+    - "3.9"
+
+cache: pip
+
+# install dependencies (in this case i have given 1 though not needed)
+install:
+    - pip install -r requirements.txt
+    - pip install codecov
+
+# run tests
+script:
+    - export PYTHONPATH=$PYTHONPATH:$(pwd)
+    - python test_blockchain.py
+    - coverage run test_blockchain.py
+
+after_success:
+    - codecov
