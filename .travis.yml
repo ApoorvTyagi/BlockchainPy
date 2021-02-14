@@ -7,7 +7,7 @@ cache: pip
 
 # install dependencies (in this case i have given 1 though not needed)
 install:
-    - pip install -r requirements.txt
+    - pip install -r Requirements.txt
     - pip install codecov
 
 # run tests
