@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/ApoorvTyagi/travis.svg?branch=main)](https://travis-ci.com/ApoorvTyagi/BlockchainPy)
+[![codecov](https://codecov.io/gh/ApoorvTyagi/BlockchainPy/branch/main/graph/badge.svg)](https://codecov.io/gh/ApoorvTyagi/BlockchainPy)
 # BlockchainPy
 A blockchain made in python
 
